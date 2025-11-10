@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI & Technology Glossary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+
+        .key-concepts {
+            background: #f0f7ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+
+        .key-concepts h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+
+        .key-concept {
+            margin-bottom: 15px;
+        }
+
+        .key-concept strong {
+            color: #333;
+            font-size: 18px;
+        }
+
+        .key-concept p {
+            color: #555;
+            line-height: 1.6;
+            margin-top: 5px;
+        }
+
+        .glossary-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .term {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #dee2e6;
+            transition: all 0.3s;
+        }
+
+        .term:hover {
+            background: #e9ecef;
+            border-left-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .term-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .term-definition {
+            color: #555;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .search-box {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .search-box input {
+            width: 100%;
+            max-width: 500px;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 2px solid #dee2e6;
+            border-radius: 25px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .print-btn {
+            display: block;
+            margin: 0 auto 30px;
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .print-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                box-shadow: none;
+                padding: 20px;
+            }
+
+            .print-btn, .search-box {
+                display: none;
+            }
+
+            .term {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Glossary</h1>
+        <p class="subtitle">Science & Technology, Online Culture, Social Media, and the Age of AI</p>
+
+        <button class="print-btn" onclick="window.print()">🖨️ Print Glossary</button>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 Search for a term..." onkeyup="searchTerms()">
+        </div>
+
+        <div class="key-concepts">
+            <h2>Key Concepts</h2>
+            
+            <div class="key-concept">
+                <strong>Utopian Vision</strong>
+                <p>A positive, hopeful view of the future where technology and society improve people's lives. In a utopian vision, new inventions and social changes solve problems, create opportunities, and make the world a better, fairer, and happier place for everyone.</p>
+            </div>
+
+            <div class="key-concept">
+                <strong>Dystopian Vision</strong>
+                <p>A negative, worrying view of the future where technology and society create serious problems. In a dystopian vision, new developments lead to increased control, loss of freedom, inequality, and harm to individuals or society. People fear the negative consequences more than they celebrate the benefits.</p>
+            </div>
+        </div>
+
+        <div class="glossary-grid" id="glossary">
+            <div class="term">
+                <div class="term-name">AI slop</div>
+                <div class="term-definition">Low-quality content that is created quickly and carelessly by artificial intelligence. This content often feels generic, unoriginal, or poorly made, flooding the internet with mediocre material that wastes people's time.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">algorithm</div>
+                <div class="term-definition">A set of rules or instructions that a computer follows to solve a problem or make decisions. On social media, algorithms decide what content you see in your feed based on your past behavior and preferences.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">algorithmic bias</div>
+                <div class="term-definition">When computer systems make unfair decisions because they learned from biased data or were programmed with human prejudices. This can lead to discrimination against certain groups of people in areas like hiring, lending, or policing.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">augmented reality</div>
+                <div class="term-definition">Technology that adds digital information or images to what you see in the real world, usually through your phone or special glasses. For example, Pokémon GO shows virtual creatures in real locations.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">automation</div>
+                <div class="term-definition">When machines or computers do work that humans used to do. This can make processes faster and cheaper, but it may also eliminate jobs and change the nature of work.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">autonomous vehicles</div>
+                <div class="term-definition">Cars, trucks, or other vehicles that can drive themselves without a human driver. They use sensors, cameras, and AI to navigate roads and make decisions.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">biotechnology</div>
+                <div class="term-definition">The use of living organisms or biological processes to develop new products or solve problems. This includes things like genetic engineering, creating new medicines, or developing crops that resist disease.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">brain rot</div>
+                <div class="term-definition">A slang term describing the mental decline or loss of focus caused by consuming too much low-quality online content. People feel their thinking becomes less sharp when they spend too much time on mindless scrolling or watching trivial videos.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">cancel culture</div>
+                <div class="term-definition">The practice of publicly calling out and boycotting people (often celebrities or public figures) for behavior or statements considered offensive or problematic. This can lead to them losing their job, reputation, or platform.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">citizen journalism</div>
+                <div class="term-definition">When ordinary people report news and share information through social media and blogs, rather than professional journalists working for traditional media companies. Anyone with a phone can document and share events as they happen.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">content moderation</div>
+                <div class="term-definition">The process of reviewing and removing inappropriate, harmful, or rule-breaking content from websites and social media platforms. This can be done by human moderators or AI systems.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">cyberbullying</div>
+                <div class="term-definition">Using the internet, social media, or digital devices to harass, threaten, or embarrass someone. This can include sending mean messages, spreading rumors, or posting embarrassing photos without permission.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">data privacy</div>
+                <div class="term-definition">The right to control what information about you is collected, how it's used, and who can see it. This includes protecting personal details like your location, browsing history, and private messages.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">deep learning</div>
+                <div class="term-definition">A type of artificial intelligence that learns patterns from huge amounts of data, similar to how human brains learn. It's used for things like recognizing faces in photos, understanding speech, or translating languages.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">digital divide</div>
+                <div class="term-definition">The gap between people who have access to modern technology (computers, internet, smartphones) and those who don't. This creates inequality because people without access miss out on opportunities for education, work, and information.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">digital footprint</div>
+                <div class="term-definition">The trail of data you leave behind when using the internet. This includes your social media posts, comments, photos, search history, and any information that can be traced back to you online.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">digital literacy</div>
+                <div class="term-definition">The ability to use technology effectively and understand how to find, evaluate, and create information online. It also includes knowing how to stay safe and identify fake news or scams.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">doomscrolling</div>
+                <div class="term-definition">Spending excessive amounts of time reading bad news online, even though it makes you feel anxious or depressed. People continue scrolling through negative content even when they know it's harming their mental health.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">echo chamber</div>
+                <div class="term-definition">A situation where you only hear opinions and information that match what you already believe. This happens when algorithms or your choice of friends/media sources reinforce your existing views without exposing you to different perspectives.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">facial recognition</div>
+                <div class="term-definition">Technology that can identify or verify a person by analyzing their face. This is used for unlocking phones, security systems, or tracking people in public spaces.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">filter bubble</div>
+                <div class="term-definition">When websites and social media only show you content that matches your interests and previous behavior, creating a "bubble" where you see a limited view of the world. This can prevent you from encountering diverse ideas or perspectives.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">influencer culture</div>
+                <div class="term-definition">The phenomenon where social media personalities (influencers) have significant impact on their followers' opinions, purchasing decisions, and behavior. These people make money by promoting products or lifestyles to their audience.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">machine learning</div>
+                <div class="term-definition">A type of AI where computers learn from experience and improve their performance over time without being explicitly programmed. For example, spam filters learn to recognize unwanted emails by analyzing thousands of examples.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">meme culture</div>
+                <div class="term-definition">The creation and sharing of humorous images, videos, or text that spread rapidly online. Memes often comment on current events, popular culture, or shared experiences, creating a form of digital communication and community.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">misinformation</div>
+                <div class="term-definition">False or inaccurate information that spreads online, whether shared accidentally or intentionally. This can include fake news, manipulated photos, or out-of-context quotes that mislead people.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">neural networks</div>
+                <div class="term-definition">Computer systems designed to work like the human brain, with interconnected "neurons" that process information. These are used in AI to recognize patterns, make predictions, and learn from data.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">online activism</div>
+                <div class="term-definition">Using social media and the internet to raise awareness about social or political issues, organize protests, or push for change. This can include hashtag campaigns, online petitions, or coordinating real-world actions.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">personalized medicine</div>
+                <div class="term-definition">Medical treatment that is customized for each individual patient based on their genes, lifestyle, and environment. This allows doctors to choose treatments that are most likely to work for that specific person.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">predictive policing</div>
+                <div class="term-definition">Using data analysis and AI to predict where crimes are likely to happen or who might commit crimes. Police departments use this to decide where to patrol, but critics worry it reinforces existing biases.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">quantum computing</div>
+                <div class="term-definition">An extremely powerful type of computing that uses principles of quantum physics to process information much faster than regular computers. This could revolutionize fields like medicine, cryptography, and scientific research.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">renewable energy</div>
+                <div class="term-definition">Energy that comes from natural sources that don't run out, like sunlight, wind, or water. Unlike fossil fuels, renewable energy doesn't pollute the environment and can be used indefinitely.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">social credit system</div>
+                <div class="term-definition">A government system (used in some countries like China) that monitors and rates citizens' behavior, rewarding "good" behavior and punishing "bad" behavior. This can affect people's ability to travel, get loans, or access services.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">surveillance capitalism</div>
+                <div class="term-definition">A business model where companies collect huge amounts of data about people's behavior and use it to predict and influence what they will do next, primarily to sell targeted advertising or products.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">technological unemployment</div>
+                <div class="term-definition">Job loss caused when machines, robots, or AI systems replace human workers. As technology advances, certain jobs become automated, leaving workers without employment.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">telemedicine</div>
+                <div class="term-definition">Healthcare services delivered remotely through video calls, phone consultations, or online platforms. Patients can talk to doctors and receive medical advice without visiting a clinic or hospital in person.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">universal basic income</div>
+                <div class="term-definition">A proposed system where the government regularly gives all citizens a fixed amount of money, regardless of whether they work or not. This aims to provide financial security, especially as automation eliminates jobs.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">viral content</div>
+                <div class="term-definition">Photos, videos, or posts that spread extremely quickly across the internet, being shared by millions of people in a short time. Content "goes viral" when it captures widespread attention or emotion.</div>
+            </div>
+
+            <div class="term">
+                <div class="term-name">virtual reality</div>
+                <div class="term-definition">Technology that creates a completely digital environment that you can explore and interact with using special headsets and controllers. It makes you feel like you're actually inside a different world.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function searchTerms() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const terms = document.getElementsByClassName('term');
+
+            for (let i = 0; i < terms.length; i++) {
+                const termName = terms[i].getElementsByClassName('term-name')[0];
+                const termDef = terms[i].getElementsByClassName('term-definition')[0];
+                const nameText = termName.textContent || termName.innerText;
+                const defText = termDef.textContent || termDef.innerText;
+
+                if (nameText.toLowerCase().indexOf(filter) > -1 || 
+                    defText.toLowerCase().indexOf(filter) > -1) {
+                    terms[i].style.display = '';
+                } else {
+                    terms[i].style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

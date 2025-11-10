@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI & Technology Flashcards</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .flashcard-container {
+            perspective: 1000px;
+            margin-bottom: 30px;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 400px;
+            position: relative;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .card-front {
+            background: white;
+        }
+
+        .card-back {
+            background: #f8f9fa;
+            transform: rotateY(180deg);
+        }
+
+        .card-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-content {
+            font-size: 24px;
+            color: #333;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .card-back .card-content {
+            font-size: 20px;
+            color: #555;
+        }
+
+        .tap-hint {
+            position: absolute;
+            bottom: 20px;
+            font-size: 13px;
+            color: #999;
+            font-style: italic;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-prev, .btn-next {
+            background: white;
+            color: #667eea;
+            flex: 1;
+        }
+
+        .btn-shuffle {
+            background: #4ecdc4;
+            color: white;
+            flex: 1;
+        }
+
+        .progress {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            color: #667eea;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar-container {
+            background: #e9ecef;
+            height: 8px;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            transition: width 0.3s;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .flashcard {
+                height: 350px;
+            }
+
+            .card-content {
+                font-size: 20px;
+            }
+
+            .card-back .card-content {
+                font-size: 18px;
+            }
+
+            .btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+
+            .controls {
+                flex-wrap: wrap;
+            }
+
+            .btn-prev, .btn-next, .btn-shuffle {
+                flex: 1 1 45%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .flashcard {
+                height: 300px;
+            }
+
+            .card-face {
+                padding: 30px 20px;
+            }
+
+            .card-content {
+                font-size: 18px;
+            }
+
+            .card-back .card-content {
+                font-size: 16px;
+            }
+        }
+
+        .emoji {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎴 AI & Technology Flashcards</h1>
+            <p>Tap the card to flip it!</p>
+        </div>
+
+        <div class="flashcard-container">
+            <div class="flashcard" id="flashcard" onclick="flipCard()">
+                <div class="card-face card-front">
+                    <div class="card-label">Question</div>
+                    <div class="emoji" id="frontEmoji">❓</div>
+                    <div class="card-content" id="question"></div>
+                    <div class="tap-hint">Tap to see answer</div>
+                </div>
+                <div class="card-face card-back">
+                    <div class="card-label">Answer</div>
+                    <div class="emoji">💡</div>
+                    <div class="card-content" id="answer"></div>
+                    <div class="tap-hint">Tap to see question</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-prev" onclick="previousCard()">← Previous</button>
+            <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Shuffle</button>
+            <button class="btn btn-next" onclick="nextCard()">Next →</button>
+        </div>
+
+        <div class="progress">
+            <div id="progressText">Card 1 of 40</div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const flashcards = [
+            {
+                question: "What is a utopian vision?",
+                answer: "A positive, hopeful view of the future where technology and society improve people's lives and make the world better for everyone."
+            },
+            {
+                question: "What is a dystopian vision?",
+                answer: "A negative, worrying view of the future where technology and society create serious problems, increase control, and harm individuals or society."
+            },
+            {
+                question: "What is AI slop?",
+                answer: "Low-quality content created quickly and carelessly by artificial intelligence that floods the internet with generic, mediocre material."
+            },
+            {
+                question: "What is an algorithm?",
+                answer: "A set of rules or instructions that a computer follows to make decisions, like deciding what content appears in your social media feed."
+            },
+            {
+                question: "What is algorithmic bias?",
+                answer: "When computer systems make unfair decisions because they learned from biased data, leading to discrimination against certain groups of people."
+            },
+            {
+                question: "What is augmented reality?",
+                answer: "Technology that adds digital information or images to what you see in the real world through your phone or special glasses."
+            },
+            {
+                question: "What is automation?",
+                answer: "When machines or computers do work that humans used to do, making processes faster but potentially eliminating jobs."
+            },
+            {
+                question: "What are autonomous vehicles?",
+                answer: "Cars or vehicles that can drive themselves without a human driver using sensors, cameras, and AI."
+            },
+            {
+                question: "What is biotechnology?",
+                answer: "The use of living organisms or biological processes to develop new products, medicines, or solve problems like creating disease-resistant crops."
+            },
+            {
+                question: "What is brain rot?",
+                answer: "Mental decline or loss of focus caused by consuming too much low-quality online content through endless scrolling."
+            },
+            {
+                question: "What is cancel culture?",
+                answer: "The practice of publicly calling out and boycotting people for offensive behavior, often leading to them losing their reputation or job."
+            },
+            {
+                question: "What is citizen journalism?",
+                answer: "When ordinary people report news and share information through social media instead of professional journalists working for traditional media."
+            },
+            {
+                question: "What is content moderation?",
+                answer: "The process of reviewing and removing inappropriate or harmful content from websites and social media platforms."
+            },
+            {
+                question: "What is cyberbullying?",
+                answer: "Using the internet or digital devices to harass, threaten, or embarrass someone through mean messages, rumors, or embarrassing posts."
+            },
+            {
+                question: "What is data privacy?",
+                answer: "The right to control what personal information about you is collected, how it's used, and who can see it."
+            },
+            {
+                question: "What is deep learning?",
+                answer: "A type of AI that learns patterns from huge amounts of data similar to how human brains learn, used for tasks like face recognition."
+            },
+            {
+                question: "What is the digital divide?",
+                answer: "The gap between people who have access to modern technology and those who don't, creating inequality in opportunities."
+            },
+            {
+                question: "What is a digital footprint?",
+                answer: "The trail of data you leave behind when using the internet, including posts, comments, photos, and search history."
+            },
+            {
+                question: "What is digital literacy?",
+                answer: "The ability to use technology effectively, evaluate online information, and stay safe while identifying fake news or scams."
+            },
+            {
+                question: "What is doomscrolling?",
+                answer: "Spending excessive time reading bad news online even though it makes you anxious or depressed."
+            },
+            {
+                question: "What is an echo chamber?",
+                answer: "A situation where you only hear opinions that match what you already believe, reinforcing your views without different perspectives."
+            },
+            {
+                question: "What is facial recognition?",
+                answer: "Technology that can identify or verify a person by analyzing their face, used for unlocking phones or security systems."
+            },
+            {
+                question: "What is a filter bubble?",
+                answer: "When websites only show you content matching your interests and previous behavior, creating a limited view of the world."
+            },
+            {
+                question: "What is influencer culture?",
+                answer: "The phenomenon where social media personalities have significant impact on their followers' opinions and purchasing decisions."
+            },
+            {
+                question: "What is machine learning?",
+                answer: "A type of AI where computers learn from experience and improve over time without being explicitly programmed for each task."
+            },
+            {
+                question: "What is meme culture?",
+                answer: "The creation and sharing of humorous images, videos, or text that spread rapidly online, creating digital communication and community."
+            },
+            {
+                question: "What is misinformation?",
+                answer: "False or inaccurate information that spreads online, including fake news, manipulated photos, or misleading content."
+            },
+            {
+                question: "What are neural networks?",
+                answer: "Computer systems designed to work like the human brain with interconnected parts that process information and learn from data."
+            },
+            {
+                question: "What is online activism?",
+                answer: "Using social media and the internet to raise awareness about issues, organize protests, or push for social or political change."
+            },
+            {
+                question: "What is personalized medicine?",
+                answer: "Medical treatment customized for each patient based on their genes, lifestyle, and environment to choose the most effective treatment."
+            },
+            {
+                question: "What is predictive policing?",
+                answer: "Using data analysis and AI to predict where crimes are likely to happen or who might commit them to guide police patrols."
+            },
+            {
+                question: "What is quantum computing?",
+                answer: "An extremely powerful type of computing using quantum physics to process information much faster than regular computers."
+            },
+            {
+                question: "What is renewable energy?",
+                answer: "Energy from natural sources that don't run out, like sunlight, wind, or water, that doesn't pollute the environment."
+            },
+            {
+                question: "What is a social credit system?",
+                answer: "A government system that monitors and rates citizens' behavior, rewarding good behavior and punishing bad behavior."
+            },
+            {
+                question: "What is surveillance capitalism?",
+                answer: "A business model where companies collect huge amounts of data about people's behavior to predict and influence their future actions."
+            },
+            {
+                question: "What is technological unemployment?",
+                answer: "Job loss caused when machines, robots, or AI systems replace human workers as technology advances."
+            },
+            {
+                question: "What is telemedicine?",
+                answer: "Healthcare services delivered remotely through video calls or online platforms so patients can consult doctors without visiting in person."
+            },
+            {
+                question: "What is universal basic income?",
+                answer: "A proposed system where the government regularly gives all citizens money regardless of whether they work, providing financial security."
+            },
+            {
+                question: "What is viral content?",
+                answer: "Photos, videos, or posts that spread extremely quickly across the internet, being shared by millions of people in a short time."
+            },
+            {
+                question: "What is virtual reality?",
+                answer: "Technology that creates a completely digital environment you can explore using special headsets, making you feel inside a different world."
+            }
+        ];
+
+        let currentIndex = 0;
+        let isFlipped = false;
+        let cardOrder = [...Array(flashcards.length).keys()]; // [0, 1, 2, ..., 39]
+
+        function loadCard() {
+            const card = flashcards[cardOrder[currentIndex]];
+            document.getElementById('question').textContent = card.question;
+            document.getElementById('answer').textContent = card.answer;
+            updateProgress();
+            
+            // Reset flip state
+            if (isFlipped) {
+                document.getElementById('flashcard').classList.remove('flipped');
+                isFlipped = false;
+            }
+        }
+
+        function flipCard() {
+            const flashcard = document.getElementById('flashcard');
+            flashcard.classList.toggle('flipped');
+            isFlipped = !isFlipped;
+        }
+
+        function nextCard() {
+            currentIndex = (currentIndex + 1) % flashcards.length;
+            loadCard();
+        }
+
+        function previousCard() {
+            currentIndex = (currentIndex - 1 + flashcards.length) % flashcards.length;
+            loadCard();
+        }
+
+        function shuffleCards() {
+            // Fisher-Yates shuffle
+            for (let i = cardOrder.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cardOrder[i], cardOrder[j]] = [cardOrder[j], cardOrder[i]];
+            }
+            currentIndex = 0;
+            loadCard();
+        }
+
+        function updateProgress() {
+            const progressText = document.getElementById('progressText');
+            const progressBar = document.getElementById('progressBar');
+            
+            progressText.textContent = `Card ${currentIndex + 1} of ${flashcards.length}`;
+            progressBar.style.width = `${((currentIndex + 1) / flashcards.length) * 100}%`;
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight' || event.key === ' ') {
+                event.preventDefault();
+                if (event.key === ' ') {
+                    flipCard();
+                } else {
+                    nextCard();
+                }
+            } else if (event.key === 'ArrowLeft') {
+                event.preventDefault();
+                previousCard();
+            }
+        });
+
+        // Initialize
+        loadCard();
+    </script>
+</body>
+</html>
