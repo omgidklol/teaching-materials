@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Populism Flashcards</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .flashcard-wrapper {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .card-number {
+            font-size: 14px;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        .learned-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .learned-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .learned-checkbox label {
+            font-size: 14px;
+            color: #7f8c8d;
+            cursor: pointer;
+        }
+
+        .flashcard-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .card-side {
+            display: none;
+        }
+
+        .card-side.active {
+            display: block;
+        }
+
+        .card-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #95a5a6;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .card-text {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #2c3e50;
+        }
+
+        .card-text ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .card-text li {
+            margin-bottom: 8px;
+        }
+
+        .flip-hint {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #95a5a6;
+            font-style: italic;
+        }
+
+        .controls {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .button-row {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: 1px solid #bdc3c7;
+            background: white;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .btn:hover {
+            background: #ecf0f1;
+            border-color: #95a5a6;
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            border-color: #2980b9;
+        }
+
+        .progress-section {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        .progress-bar-container {
+            background: #ecf0f1;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: #3498db;
+            height: 100%;
+            transition: width 0.3s;
+            border-radius: 4px;
+        }
+
+        .learned-stats {
+            margin-top: 12px;
+            font-size: 13px;
+            color: #27ae60;
+            font-weight: 500;
+        }
+
+        .jump-menu {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .jump-menu h3 {
+            font-size: 16px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+        }
+
+        .card-button {
+            padding: 12px;
+            border: 1px solid #bdc3c7;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .card-button:hover {
+            background: #ecf0f1;
+            border-color: #95a5a6;
+        }
+
+        .card-button.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .card-button.learned {
+            background: #27ae60;
+            color: white;
+            border-color: #27ae60;
+        }
+
+        .card-button.learned:hover {
+            background: #229954;
+            border-color: #229954;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .header, .flashcard-wrapper, .controls, .progress-section, .jump-menu {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .card-text {
+                font-size: 16px;
+            }
+
+            .button-row {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .card-grid {
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Populism Flashcards</h1>
+            <p>Click on the card to flip between question and answer</p>
+        </div>
+
+        <div class="flashcard-wrapper">
+            <div class="card-header">
+                <span class="card-number" id="cardNumber">Card 1 of 22</span>
+                <div class="learned-checkbox">
+                    <input type="checkbox" id="learnedCheck" onchange="toggleLearned()">
+                    <label for="learnedCheck">Mark as learned</label>
+                </div>
+            </div>
+
+            <div class="flashcard-content" onclick="flipCard()">
+                <div class="card-side active" id="frontSide">
+                    <div class="card-label">Question</div>
+                    <div class="card-text" id="frontText"></div>
+                </div>
+
+                <div class="card-side" id="backSide">
+                    <div class="card-label">Answer</div>
+                    <div class="card-text" id="backText"></div>
+                </div>
+
+                <div class="flip-hint">Click to flip card</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="button-row">
+                <button class="btn" onclick="previousCard()">← Previous</button>
+                <button class="btn" onclick="flipCard()">Flip Card</button>
+                <button class="btn" onclick="shuffleCards()">Shuffle</button>
+                <button class="btn" onclick="resetLearned()">Reset Learned</button>
+                <button class="btn" onclick="nextCard()">Next →</button>
+            </div>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-info">
+                <span>Progress</span>
+                <span id="progressText">1 / 22</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="learned-stats" id="learnedStats">0 cards marked as learned (0%)</div>
+        </div>
+
+        <div class="jump-menu">
+            <h3>Jump to Card</h3>
+            <div class="card-grid" id="cardGrid"></div>
+        </div>
+    </div>
+
+    <script>
+        const flashcards = [
+            {
+                front: "What is the central idea of populism?",
+                back: "<ul><li>Power belongs to the people</li><li>Politics should express the will of the people</li></ul>"
+            },
+            {
+                front: "According to political science, how does populism describe society?",
+                back: "<ul><li>Society is separated into two groups at odds with one another</li><li>\"The pure people\" versus \"the corrupt elite\"</li></ul>"
+            },
+            {
+                front: "What does the populist leader claim to represent?",
+                back: "<ul><li>The unified will of the people</li><li>Stands in opposition to an enemy (often the current political system)</li></ul>"
+            },
+            {
+                front: "What narrative does populism tell?",
+                back: "<ul><li>The story of the people betrayed by the elite</li><li>Through the leader, people realize they've been oppressed</li><li>The people begin their path to liberation</li></ul>"
+            },
+            {
+                front: "When does populism emerge most strongly in society?",
+                back: "<ul><li>When democracy enters a crisis</li><li>When citizens' trust in political institutions weakens</li><li>When established politicians adopt more populist rhetoric</li></ul>"
+            },
+            {
+                front: "What is populism a symptom of?",
+                back: "Always a symptom of deeper problems within democratic systems"
+            },
+            {
+                front: "What are two key behavioral characteristics of populist leaders?",
+                back: "<ul><li>Behaving in ways not typical of traditional politicians (sometimes called \"bad manners\")</li><li>Perpetuating a state of crisis and always seeming to be on the offensive</li></ul>"
+            },
+            {
+                front: "What is populist content made of?",
+                back: "<ul><li>Made of negatives</li><li>Examples: anti-politics, anti-intellectualism, or anti-elite</li><li>This gives populism extraordinary power because it can adapt to all situations</li></ul>"
+            },
+            {
+                front: "What do populist leaders tend to dislike about modern government?",
+                back: "<ul><li>Dislike the complicated democratic systems of modern government</li><li>Prefer direct democracy through referendums instead of representative institutions</li></ul>"
+            },
+            {
+                front: "What gives rise to \"strongman\" leaders?",
+                back: "<ul><li>A lack of trust in the established system</li><li>These leaders can make decisions in ways not possible in traditional democracies</li></ul>"
+            },
+            {
+                front: "What dangerous belief can populist leaders develop about themselves?",
+                back: "<ul><li>Leaders thinking they are infallible (incapable of making mistakes)</li><li>Reasoning: If you are not with \"the people,\" then you must be against them</li></ul>"
+            },
+            {
+                front: "What does it mean that populism is an \"ambivalent phenomenon\"?",
+                back: "<ul><li>Has mixed or contradictory aspects</li><li>Has both democratic and undemocratic elements</li></ul>"
+            },
+            {
+                front: "What is the democratic core of populism based on?",
+                back: "<ul><li>Based on the principle of popular sovereignty</li><li>The idea that political power rests with the people</li></ul>"
+            },
+            {
+                front: "What positive democratic impulses can populism provide?",
+                back: "<ul><li>Demanding more control of representatives by citizens</li><li>More transparency</li><li>More opportunities for participation</li><li>Can politicize issues and mobilize people</li></ul>"
+            },
+            {
+                front: "What is the undemocratic side of populism?",
+                back: "<ul><li>Propagates simple solutions while ignoring complex connections</li><li>Reality is presented in a shortened way</li><li>Argument that complexity serves the elite's goal of deceiving the people</li></ul>"
+            },
+            {
+                front: "How does populism present reality and what effect does this have?",
+                back: "<ul><li>Through extreme simplification, black-and-white presentation, and thinking in oppositions</li><li>Can polarize political debate so much that necessary exchange of opinions becomes impossible</li><li>Democratic debate then loses the plurality (variety and diversity) of its voices</li></ul>"
+            },
+            {
+                front: "With what ideologies can populism combine?",
+                back: "<ul><li>Can appear with right-wing, left-wing, or market-liberal ideologies</li><li>Populist parties can be found anywhere on the political spectrum</li></ul>"
+            },
+            {
+                front: "Where are most successful populists today located on the political spectrum?",
+                back: "<ul><li>On the right, particularly the radical right</li><li>These politicians combine populism with nativism and authoritarianism</li></ul>"
+            },
+            {
+                front: "Define nativism.",
+                back: "Favoring native-born inhabitants over immigrants"
+            },
+            {
+                front: "What is a useful test to see the difference between populism and right-wing populism?",
+                back: "<ul><li>Analyzing how \"the people\" is defined</li><li>Populist logic idealizes the people but does not specify who belongs</li><li>Far-right ideologies have a clear conception based on ethnicity or race</li></ul>"
+            },
+            {
+                front: "How do far-right ideologies define \"the people\"?",
+                back: "<ul><li>The people appears as an ethnic or racial body</li><li>Must be defended against \"attackers\" (migrants, foreigners, Muslims, Jews, people of different races, homosexuals, or \"welfare parasites\")</li><li>These groups often appear as enemies</li></ul>"
+            },
+            {
+                front: "What makes right-wing populism fundamentally anti-democratic?",
+                back: "<ul><li>Right-wing populism makes anti-democratic ideologies socially acceptable</li><li>Violates the democratic principle of equality</li><li>Criticism of democracy does not become a democratic corrective but rather an anti-democratic position</li></ul>"
+            }
+        ];
+
+        let currentIndex = 0;
+        let isFlipped = false;
+        let cardOrder = [...Array(flashcards.length).keys()];
+        let learnedCards = new Set();
+
+        // Load learned cards from localStorage
+        function loadLearnedCards() {
+            const saved = localStorage.getItem('populismLearnedCards');
+            if (saved) {
+                learnedCards = new Set(JSON.parse(saved));
+            }
+        }
+
+        // Save learned cards to localStorage
+        function saveLearnedCards() {
+            localStorage.setItem('populismLearnedCards', JSON.stringify([...learnedCards]));
+        }
+
+        // Initialize card grid
+        function initCardGrid() {
+            const grid = document.getElementById('cardGrid');
+            grid.innerHTML = '';
+            
+            for (let i = 0; i < flashcards.length; i++) {
+                const button = document.createElement('button');
+                button.className = 'card-button';
+                button.textContent = i + 1;
+                button.onclick = () => jumpToCard(i);
+                grid.appendChild(button);
+            }
+            
+            updateCardGrid();
+        }
+
+        // Update card grid highlighting
+        function updateCardGrid() {
+            const buttons = document.querySelectorAll('.card-button');
+            buttons.forEach((btn, index) => {
+                btn.classList.remove('active', 'learned');
+                if (index === currentIndex) {
+                    btn.classList.add('active');
+                } else if (learnedCards.has(cardOrder[index])) {
+                    btn.classList.add('learned');
+                }
+            });
+        }
+
+        // Load current card
+        function loadCard() {
+            const card = flashcards[cardOrder[currentIndex]];
+            document.getElementById('frontText').innerHTML = card.front;
+            document.getElementById('backText').innerHTML = card.back;
+            document.getElementById('cardNumber').textContent = `Card ${currentIndex + 1} of ${flashcards.length}`;
+            
+            // Update learned checkbox
+            document.getElementById('learnedCheck').checked = learnedCards.has(cardOrder[currentIndex]);
+            
+            // Reset to front side
+            if (isFlipped) {
+                document.getElementById('frontSide').classList.add('active');
+                document.getElementById('backSide').classList.remove('active');
+                isFlipped = false;
+            }
+            
+            updateProgress();
+            updateCardGrid();
+        }
+
+        // Flip card
+        function flipCard() {
+            const frontSide = document.getElementById('frontSide');
+            const backSide = document.getElementById('backSide');
+            
+            if (isFlipped) {
+                frontSide.classList.add('active');
+                backSide.classList.remove('active');
+            } else {
+                frontSide.classList.remove('active');
+                backSide.classList.add('active');
+            }
+            
+            isFlipped = !isFlipped;
+        }
+
+        // Navigation
+        function nextCard() {
+            currentIndex = (currentIndex + 1) % flashcards.length;
+            loadCard();
+        }
+
+        function previousCard() {
+            currentIndex = (currentIndex - 1 + flashcards.length) % flashcards.length;
+            loadCard();
+        }
+
+        function jumpToCard(index) {
+            currentIndex = index;
+            loadCard();
+        }
+
+        // Shuffle
+        function shuffleCards() {
+            for (let i = cardOrder.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cardOrder[i], cardOrder[j]] = [cardOrder[j], cardOrder[i]];
+            }
+            currentIndex = 0;
+            loadCard();
+        }
+
+        // Toggle learned status
+        function toggleLearned() {
+            const cardId = cardOrder[currentIndex];
+            if (learnedCards.has(cardId)) {
+                learnedCards.delete(cardId);
+            } else {
+                learnedCards.add(cardId);
+            }
+            saveLearnedCards();
+            updateProgress();
+            updateCardGrid();
+        }
+
+        // Reset all learned cards
+        function resetLearned() {
+            if (confirm('Are you sure you want to reset all learned cards?')) {
+                learnedCards.clear();
+                saveLearnedCards();
+                document.getElementById('learnedCheck').checked = false;
+                updateProgress();
+                updateCardGrid();
+            }
+        }
+
+        // Update progress
+        function updateProgress() {
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const learnedStats = document.getElementById('learnedStats');
+            
+            const progress = ((currentIndex + 1) / flashcards.length) * 100;
+            progressBar.style.width = progress + '%';
+            progressText.textContent = `${currentIndex + 1} / ${flashcards.length}`;
+            
+            const learnedCount = learnedCards.size;
+            const learnedPercent = Math.round((learnedCount / flashcards.length) * 100);
+            learnedStats.textContent = `${learnedCount} cards marked as learned (${learnedPercent}%)`;
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight') {
+                event.preventDefault();
+                nextCard();
+            } else if (event.key === 'ArrowLeft') {
+                event.preventDefault();
+                previousCard();
+            } else if (event.key === ' ') {
+                event.preventDefault();
+                flipCard();
+            }
+        });
+
+        // Initialize
+        loadLearnedCards();
+        initCardGrid();
+        loadCard();
+    </script>
+</body>
+</html>
