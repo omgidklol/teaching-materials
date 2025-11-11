@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soziale Gerechtigkeit - Flashcards</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .flashcard-wrapper {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .card-number {
+            font-size: 14px;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        .learned-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .learned-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .learned-checkbox label {
+            font-size: 14px;
+            color: #7f8c8d;
+            cursor: pointer;
+        }
+
+        .flashcard-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .card-side {
+            display: none;
+        }
+
+        .card-side.active {
+            display: block;
+        }
+
+        .card-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #95a5a6;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .card-text {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #2c3e50;
+        }
+
+        .card-text.term {
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .card-text ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .card-text li {
+            margin-bottom: 12px;
+        }
+
+        .flip-hint {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #95a5a6;
+            font-style: italic;
+        }
+
+        .controls {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .button-row {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: 1px solid #bdc3c7;
+            background: white;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .btn:hover {
+            background: #ecf0f1;
+            border-color: #95a5a6;
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .progress-section {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        .progress-bar-container {
+            background: #ecf0f1;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: #3498db;
+            height: 100%;
+            transition: width 0.3s;
+            border-radius: 4px;
+        }
+
+        .learned-stats {
+            margin-top: 12px;
+            font-size: 13px;
+            color: #27ae60;
+            font-weight: 500;
+        }
+
+        .jump-menu {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .jump-menu h3 {
+            font-size: 16px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+        }
+
+        .card-button {
+            padding: 12px;
+            border: 1px solid #bdc3c7;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .card-button:hover {
+            background: #ecf0f1;
+            border-color: #95a5a6;
+        }
+
+        .card-button.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .card-button.learned {
+            background: #27ae60;
+            color: white;
+            border-color: #27ae60;
+        }
+
+        .card-button.learned:hover {
+            background: #229954;
+            border-color: #229954;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .header, .flashcard-wrapper, .controls, .progress-section, .jump-menu {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .card-text {
+                font-size: 16px;
+            }
+
+            .card-text.term {
+                font-size: 20px;
+            }
+
+            .button-row {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .card-grid {
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Soziale Gerechtigkeit - Flashcards</h1>
+            <p>Klicke auf die Karte, um sie umzudrehen</p>
+        </div>
+
+        <div class="flashcard-wrapper">
+            <div class="card-header">
+                <span class="card-number" id="cardNumber">Karte 1 von 20</span>
+                <div class="learned-checkbox">
+                    <input type="checkbox" id="learnedCheck" onchange="toggleLearned()">
+                    <label for="learnedCheck">Als gelernt markieren</label>
+                </div>
+            </div>
+
+            <div class="flashcard-content" onclick="flipCard()">
+                <div class="card-side active" id="frontSide">
+                    <div class="card-label">Begriff</div>
+                    <div class="card-text term" id="frontText"></div>
+                </div>
+
+                <div class="card-side" id="backSide">
+                    <div class="card-label">Definition</div>
+                    <div class="card-text" id="backText"></div>
+                </div>
+
+                <div class="flip-hint">Karte anklicken zum Umdrehen</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="button-row">
+                <button class="btn" onclick="previousCard()">← Zurück</button>
+                <button class="btn" onclick="flipCard()">Umdrehen</button>
+                <button class="btn" onclick="shuffleCards()">Mischen</button>
+                <button class="btn" onclick="resetLearned()">Gelernte zurücksetzen</button>
+                <button class="btn" onclick="nextCard()">Weiter →</button>
+            </div>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-info">
+                <span>Fortschritt</span>
+                <span id="progressText">1 / 20</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="learned-stats" id="learnedStats">0 Karten als gelernt markiert (0%)</div>
+        </div>
+
+        <div class="jump-menu">
+            <h3>Springe zu Karte</h3>
+            <div class="card-grid" id="cardGrid"></div>
+        </div>
+    </div>
+
+    <script>
+        const flashcards = [
+            {
+                front: "Ungleichheit vs. Ungerechtigkeit",
+                back: "<ul><li><strong>Ungleichheit:</strong> Unterschiede zwischen Menschen (z.B. in Einkommen, Bildung) – kann natürlich oder gewollt sein</li><li><strong>Ungerechtigkeit:</strong> Wenn Ungleichheit als unfair empfunden wird, weil sie nicht gerechtfertigt ist</li><li><strong>Beispiel:</strong> Dass ein Arzt mehr verdient als ein Kassierer ist Ungleichheit, aber nicht zwingend ungerecht. Wenn aber Menschen mit gleicher Qualifikation unterschiedlich bezahlt werden (z.B. wegen Geschlecht), ist das ungerecht</li></ul>"
+            },
+            {
+                front: "Chancengerechtigkeit",
+                back: "<ul><li>Alle Menschen sollen die gleichen Möglichkeiten haben, ihre Fähigkeiten zu entwickeln und erfolgreich zu sein</li><li>Start ins Leben soll für alle ähnlich fair sein, unabhängig von Herkunft oder Elternhaus</li><li><strong>Beispiel in Deutschland:</strong> Kostenlose Bildung, BAföG, Kitaplätze sollen helfen, dass nicht nur Kinder reicher Eltern studieren können</li><li>Problem: In Deutschland hängt Bildungserfolg noch stark vom Elternhaus ab</li></ul>"
+            },
+            {
+                front: "Bildungsgerechtigkeit",
+                back: "<ul><li>Alle Kinder und Jugendlichen sollen Zugang zu guter Bildung haben, unabhängig von Herkunft oder Wohnort</li><li>Bildungserfolg soll nicht von sozialem Status der Eltern abhängen</li><li><strong>Problem in Deutschland:</strong> Kinder aus Akademikerfamilien studieren viel häufiger als Kinder von Nicht-Akademikern</li><li><strong>Maßnahmen:</strong> Ganztags-Kitas, kleinere Klassen in Brennpunkt-Schulen, kostenlose Nachhilfe</li></ul>"
+            },
+            {
+                front: "Einkommens- und Vermögensungleichheit",
+                back: "<ul><li><strong>Einkommensungleichheit:</strong> Unterschiede in dem, was Menschen verdienen (Gehalt, Lohn)</li><li><strong>Vermögensungleichheit:</strong> Unterschiede in dem, was Menschen besitzen (Immobilien, Aktien, Ersparnisse)</li><li><strong>In Deutschland:</strong> Die reichsten 10% besitzen etwa 60% des gesamten Vermögens, während die ärmere Hälfte fast nichts besitzt</li><li>Vermögen ist viel ungleicher verteilt als Einkommen</li></ul>"
+            },
+            {
+                front: "Erbschaftssteuerreform in Deutschland",
+                back: "<ul><li>Diskussion: Sollen große Erbschaften höher besteuert werden, um Ungleichheit zu verringern?</li><li><strong>Argumente dafür:</strong> Vermögen wird ohne eigene Leistung weitergegeben; Staat braucht Einnahmen</li><li><strong>Argumente dagegen:</strong> Doppelbesteuerung; Familienunternehmen könnten gefährdet werden</li><li><strong>Aktuell:</strong> Betriebsvermögen (Firmen) wird stark begünstigt, normale Erbschaften weniger</li></ul>"
+            },
+            {
+                front: "Vermögenssteuer vs. Vermögensabgabe",
+                back: "<ul><li><strong>Vermögenssteuer:</strong> Jährliche Steuer auf das gesamte Vermögen einer Person (in Deutschland seit 1997 ausgesetzt)</li><li><strong>Vermögensabgabe:</strong> Einmalige Sondersteuer auf Vermögen in Ausnahmesituationen (z.B. nach Kriegen oder Krisen)</li><li><strong>Diskussion:</strong> Sollte Vermögenssteuer wieder eingeführt werden, um soziale Ungleichheit zu bekämpfen?</li><li>Kritiker sagen: Schwer zu kontrollieren, könnte Kapitalflucht auslösen</li></ul>"
+            },
+            {
+                front: "Bedarfsgerechtigkeit",
+                back: "<ul><li>Menschen mit größerem Bedarf sollen mehr Unterstützung bekommen</li><li>Nicht alle gleich behandeln, sondern nach individuellem Bedarf</li><li><strong>Beispiel in Deutschland:</strong> Menschen mit Behinderung bekommen mehr Unterstützung; Familien mit vielen Kindern erhalten Kindergeld; Hartz-IV-Empfänger bekommen staatliche Hilfe</li><li>Grundidee: \"Jedem nach seinen Bedürfnissen\"</li></ul>"
+            },
+            {
+                front: "Effizienz (politische Urteilskategorie)",
+                back: "<ul><li>Wie gut erreicht eine politische Maßnahme ihr Ziel? Welches Verhältnis zwischen Aufwand und Nutzen?</li><li>Werden Ressourcen (Geld, Zeit, Personal) sinnvoll eingesetzt?</li><li><strong>Beispiel:</strong> Ist es effizienter, Arbeitslose durch Weiterbildung zu qualifizieren oder ihnen direkt Geld zu geben?</li><li>Kann in Konflikt mit Gerechtigkeit stehen: Das Effizienteste ist nicht immer das Gerechteste</li></ul>"
+            },
+            {
+                front: "Legitimität (politische Urteilskategorie)",
+                back: "<ul><li>Ist eine politische Entscheidung oder Herrschaft rechtmäßig und wird sie von den Bürgern akzeptiert?</li><li>Beruht auf demokratischer Wahl, Rechtsstaatlichkeit und Zustimmung der Bevölkerung</li><li><strong>Beispiel:</strong> Die Bundesregierung ist legitim, weil sie demokratisch gewählt wurde</li><li>Ohne Legitimität droht Protest und Instabilität</li></ul>"
+            },
+            {
+                front: "Generationengerechtigkeit",
+                back: "<ul><li>Heutige Generationen sollen nicht auf Kosten zukünftiger Generationen leben</li><li>Umwelt, Ressourcen und Finanzen sollen für nachkommende Generationen erhalten bleiben</li><li><strong>Beispiel Klimawandel:</strong> Wenn wir heute zu viel CO₂ ausstoßen, leiden unsere Kinder und Enkel darunter</li><li><strong>Beispiel Rente:</strong> Die junge Generation zahlt für die Rente der Älteren – ist das System langfristig fair?</li></ul>"
+            },
+            {
+                front: "Demografischer Wandel in Deutschland",
+                back: "<ul><li>Die Bevölkerung wird älter, es werden weniger Kinder geboren, Menschen leben länger</li><li><strong>Folgen:</strong> Mehr Rentner, weniger Erwerbstätige; Sozialsysteme unter Druck</li><li><strong>Beispiel:</strong> 2030 wird jeder dritte Deutsche über 60 Jahre alt sein</li><li><strong>Herausforderungen:</strong> Rentensystem, Pflegenotstand, Fachkräftemangel</li></ul>"
+            },
+            {
+                front: "Solidarprinzip",
+                back: "<ul><li>Stärkere (z.B. Gesunde, Reiche) helfen Schwächeren (z.B. Kranke, Arme) – alle unterstützen sich gegenseitig</li><li>Grundlage der deutschen Sozialversicherungen (Kranken-, Renten-, Arbeitslosenversicherung)</li><li><strong>Beispiel:</strong> Gesetzliche Krankenversicherung – Gesunde zahlen für Kranke mit; Reiche zahlen mehr als Arme</li><li>Unterschied zu Privatsystemen: Nicht jeder zahlt nur für sich selbst</li></ul>"
+            },
+            {
+                front: "Fachkräftemangel",
+                back: "<ul><li>In vielen Berufen fehlen qualifizierte Arbeitskräfte (z.B. Pflege, Handwerk, IT, Ingenieurwesen)</li><li><strong>Gründe:</strong> Demografischer Wandel, zu wenig Ausbildung, unattraktive Arbeitsbedingungen</li><li><strong>Folgen:</strong> Firmen finden keine Mitarbeiter, Wirtschaftswachstum wird gebremst</li><li><strong>Lösungsansätze:</strong> Mehr Ausbildungsplätze, bessere Bezahlung, Zuwanderung von Fachkräften aus dem Ausland</li></ul>"
+            },
+            {
+                front: "Rentenreform",
+                back: "<ul><li>Anpassung des Rentensystems an demografische und wirtschaftliche Veränderungen</li><li><strong>Problem:</strong> Immer weniger Beitragszahler müssen immer mehr Rentner finanzieren</li><li><strong>Diskutierte Maßnahmen:</strong> Renteneintrittsalter erhöhen, Beiträge erhöhen, Renten kürzen, private Altersvorsorge stärken</li><li><strong>Konflikt:</strong> Generationengerechtigkeit vs. soziale Absicherung im Alter</li></ul>"
+            },
+            {
+                front: "Privilegien (im soziologischen Kontext)",
+                back: "<ul><li>Vorteile, die bestimmte Gruppen haben, ohne dafür etwas geleistet zu haben (oft unsichtbar für die Privilegierten selbst)</li><li><strong>Beispiele:</strong> Als Akademikerkind leichteren Zugang zu Bildung haben; als Mann ernster genommen werden; als Deutscher keine Diskriminierung erfahren</li><li>Privilegien werden oft nicht bewusst wahrgenommen, prägen aber Lebenschancen stark</li><li>Gegenteil: Diskriminierung und strukturelle Benachteiligung</li></ul>"
+            },
+            {
+                front: "Reichtum und Erben in Deutschland",
+                back: "<ul><li>Etwa 30% des Vermögens in Deutschland wird vererbt statt erarbeitet</li><li>Die reichsten 1% besitzen mehr als das ärmere Drittel der Bevölkerung zusammen</li><li><strong>Problem:</strong> Vermögen bleibt in bestimmten Familien; soziale Mobilität wird erschwert</li><li><strong>Debatte:</strong> Sollten Erbschaften stärker besteuert werden, um Chancengleichheit zu fördern?</li></ul>"
+            },
+            {
+                front: "Zusammenhang zwischen Bildungserfolg und Elternhaus/Migrationshintergrund",
+                back: "<ul><li>Kinder aus Akademikerfamilien studieren 3-4 Mal häufiger als Kinder aus Nicht-Akademikerfamilien</li><li>Kinder mit Migrationshintergrund haben schlechtere Bildungschancen, besonders wenn Eltern wenig Deutsch sprechen</li><li><strong>Gründe:</strong> Finanzielle Ressourcen, kulturelles Kapital, Unterstützung zu Hause, Erwartungen</li><li><strong>Problem:</strong> Bildungssystem reproduziert soziale Ungleichheit statt sie auszugleichen</li></ul>"
+            },
+            {
+                front: "Leistungsgerechtigkeit",
+                back: "<ul><li>Wer mehr leistet, soll auch mehr bekommen (Belohnung nach Anstrengung und Ergebnis)</li><li>Grundidee: \"Jedem nach seiner Leistung\"</li><li><strong>Beispiel:</strong> Höhere Gehälter für anspruchsvollere Jobs oder längere Ausbildung</li><li><strong>Problem:</strong> Was ist \"Leistung\"? Sind alle Startbedingungen gleich? Ist ein Manager wirklich 100x mehr wert als eine Pflegekraft?</li></ul>"
+            },
+            {
+                front: "Verteilungsgerechtigkeit",
+                back: "<ul><li>Wie sollen Güter, Einkommen und Chancen in einer Gesellschaft verteilt werden?</li><li>Verschiedene Prinzipien: nach Leistung, nach Bedarf, gleich für alle</li><li><strong>Beispiel:</strong> Sollte jeder das gleiche Gehalt bekommen oder soll es nach Qualifikation unterschiedlich sein?</li><li><strong>In Deutschland:</strong> Sozialer Ausgleich durch Steuern und Sozialleistungen, aber weiterhin große Unterschiede</li></ul>"
+            },
+            {
+                front: "Soziale Herkunft (als soziologischer Fachbegriff)",
+                back: "<ul><li>Das soziale Milieu, aus dem eine Person stammt (Bildung der Eltern, Beruf, Einkommen, kultureller Hintergrund)</li><li>Prägt Lebenschancen, Werte, Verhalten und Zukunftsperspektiven stark</li><li><strong>Beispiel:</strong> Kind aus Arbeiterfamilie vs. Kind aus Akademikerfamilie – unterschiedliche Unterstützung, Erwartungen, Netzwerke</li><li><strong>Problem in Deutschland:</strong> Soziale Herkunft bestimmt oft mehr über Erfolg als eigene Anstrengung</li></ul>"
+            }
+        ];
+
+        let currentIndex = 0;
+        let isFlipped = false;
+        let cardOrder = [...Array(flashcards.length).keys()];
+        let learnedCards = new Set();
+
+        function loadLearnedCards() {
+            const saved = localStorage.getItem('sozialeGerechtigkeitLearnedCards');
+            if (saved) {
+                learnedCards = new Set(JSON.parse(saved));
+            }
+        }
+
+        function saveLearnedCards() {
+            localStorage.setItem('sozialeGerechtigkeitLearnedCards', JSON.stringify([...learnedCards]));
+        }
+
+        function initCardGrid() {
+            const grid = document.getElementById('cardGrid');
+            grid.innerHTML = '';
+            
+            for (let i = 0; i < flashcards.length; i++) {
+                const button = document.createElement('button');
+                button.className = 'card-button';
+                button.textContent = i + 1;
+                button.onclick = () => jumpToCard(i);
+                grid.appendChild(button);
+            }
+            
+            updateCardGrid();
+        }
+
+        function updateCardGrid() {
+            const buttons = document.querySelectorAll('.card-button');
+            buttons.forEach((btn, index) => {
+                btn.classList.remove('active', 'learned');
+                if (index === currentIndex) {
+                    btn.classList.add('active');
+                } else if (learnedCards.has(cardOrder[index])) {
+                    btn.classList.add('learned');
+                }
+            });
+        }
+
+        function loadCard() {
+            const card = flashcards[cardOrder[currentIndex]];
+            document.getElementById('frontText').textContent = card.front;
+            document.getElementById('backText').innerHTML = card.back;
+            document.getElementById('cardNumber').textContent = `Karte ${currentIndex + 1} von ${flashcards.length}`;
+            
+            document.getElementById('learnedCheck').checked = learnedCards.has(cardOrder[currentIndex]);
+            
+            if (isFlipped) {
+                document.getElementById('frontSide').classList.add('active');
+                document.getElementById('backSide').classList.remove('active');
+                isFlipped = false;
+            }
+            
+            updateProgress();
+            updateCardGrid();
+        }
+
+        function flipCard() {
+            const frontSide = document.getElementById('frontSide');
+            const backSide = document.getElementById('backSide');
+            
+            if (isFlipped) {
+                frontSide.classList.add('active');
+                backSide.classList.remove('active');
+            } else {
+                frontSide.classList.remove('active');
+                backSide.classList.add('active');
+            }
+            
+            isFlipped = !isFlipped;
+        }
+
+        function nextCard() {
+            currentIndex = (currentIndex + 1) % flashcards.length;
+            loadCard();
+        }
+
+        function previousCard() {
+            currentIndex = (currentIndex - 1 + flashcards.length) % flashcards.length;
+            loadCard();
+        }
+
+        function jumpToCard(index) {
+            currentIndex = index;
+            loadCard();
+        }
+
+        function shuffleCards() {
+            for (let i = cardOrder.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cardOrder[i], cardOrder[j]] = [cardOrder[j], cardOrder[i]];
+            }
+            currentIndex = 0;
+            loadCard();
+        }
+
+        function toggleLearned() {
+            const cardId = cardOrder[currentIndex];
+            if (learnedCards.has(cardId)) {
+                learnedCards.delete(cardId);
+            } else {
+                learnedCards.add(cardId);
+            }
+            saveLearnedCards();
+            updateProgress();
+            updateCardGrid();
+        }
+
+        function resetLearned() {
+            if (confirm('Möchtest du wirklich alle gelernten Karten zurücksetzen?')) {
+                learnedCards.clear();
+                saveLearnedCards();
+                document.getElementById('learnedCheck').checked = false;
+                updateProgress();
+                updateCardGrid();
+            }
+        }
+
+        function updateProgress() {
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const learnedStats = document.getElementById('learnedStats');
+            
+            const progress = ((currentIndex + 1) / flashcards.length) * 100;
+            progressBar.style.width = progress + '%';
+            progressText.textContent = `${currentIndex + 1} / ${flashcards.length}`;
+            
+            const learnedCount = learnedCards.size;
+            const learnedPercent = Math.round((learnedCount / flashcards.length) * 100);
+            learnedStats.textContent = `${learnedCount} Karten als gelernt markiert (${learnedPercent}%)`;
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight') {
+                event.preventDefault();
+                nextCard();
+            } else if (event.key === 'ArrowLeft') {
+                event.preventDefault();
+                previousCard();
+            } else if (event.key === ' ') {
+                event.preventDefault();
+                flipCard();
+            }
+        });
+
+        loadLearnedCards();
+        initCardGrid();
+        loadCard();
+    </script>
+</body>
+</html>
