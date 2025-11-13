@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Vanishing Half - Matching Exercise</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .instructions {
+            background: #f0f7ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+        }
+
+        .instructions h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .instructions p {
+            color: #555;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn-shuffle {
+            background: #feca57;
+            color: #333;
+        }
+
+        .btn-check {
+            background: #4ecdc4;
+            color: white;
+        }
+
+        .btn-reset {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .score-display.show {
+            display: block;
+        }
+
+        .matching-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .column h3 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .match-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            cursor: move;
+            transition: all 0.2s;
+            font-size: 14px;
+            line-height: 1.5;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .match-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .match-item.dragging {
+            opacity: 0.5;
+            transform: rotate(2deg);
+        }
+
+        .match-item.correct {
+            border-color: #27ae60;
+            background: #d5f4e6;
+        }
+
+        .match-item.incorrect {
+            border-color: #e74c3c;
+            background: #fadbd8;
+        }
+
+        .match-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .drop-zone {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 60px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .drop-zone.drag-over {
+            background: #e7f3ff;
+            border-color: #667eea;
+            border-style: solid;
+        }
+
+        .drop-zone.occupied {
+            border-style: solid;
+            border-color: #667eea;
+        }
+
+        .drop-zone .match-item {
+            width: 100%;
+            margin: 0;
+            cursor: grab;
+        }
+
+        .answer-text {
+            color: #555;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 1024px) {
+            .matching-container {
+                grid-template-columns: 1fr;
+            }
+
+            .column h3 {
+                margin-top: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .match-item {
+                font-size: 13px;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>The Vanishing Half - Matching Exercise</h1>
+        <p class="subtitle">Match the sentence beginnings with their correct endings</p>
+
+        <div class="instructions">
+            <h3>Instructions:</h3>
+            <p>Drag each numbered statement from the left column and drop it onto the correct answer in the right column. Each correct match is worth 1 point (20 points total). Click "Shuffle" to randomize the order, "Check Answers" to see your score, and "Reset" to start over.</p>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-shuffle" onclick="shuffleItems()">🔀 Shuffle</button>
+            <button class="btn btn-check" onclick="checkAnswers()">✓ Check Answers</button>
+            <button class="btn btn-reset" onclick="resetExercise()">↻ Reset</button>
+        </div>
+
+        <div class="score-display" id="scoreDisplay"></div>
+
+        <div class="matching-container">
+            <div class="column">
+                <h3>Statements (Drag these)</h3>
+                <div id="leftColumn"></div>
+            </div>
+
+            <div class="column">
+                <h3>Answers (Drop here)</h3>
+                <div id="rightColumn"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const pairs = [
+            {
+                id: 1,
+                question: "Stella using the N-Word in front of her daughter is an example of ..",
+                answer: "internalized racism"
+            },
+            {
+                id: 2,
+                question: "When Loretta says that she \"never imaged no white woman showing up in [her] kitchen\", she uses ...",
+                answer: "vernacular English, whereby \"no\" intensifies rather than negates the statement"
+            },
+            {
+                id: 3,
+                question: "Reginald Walker, Loretta's husband, is ...",
+                answer: "a famous actor, known for his role as Sergeant Tommy Taylor on the police drama Frisk"
+            },
+            {
+                id: 4,
+                question: "Stella constantly watching what the Walkers do and where they go is an example of ...",
+                answer: "her growing paranoia and insecurity"
+            },
+            {
+                id: 5,
+                question: "Kennedy playing with the Walker girl reminds Stella of ...",
+                answer: "her own childhood when she played with white girls"
+            },
+            {
+                id: 6,
+                question: "For three weeks straight, ...",
+                answer: "Stella avoided Loretta Walker"
+            },
+            {
+                id: 7,
+                question: "Cath Johansen's character role is that of ...",
+                answer: "the neighborhood gossip"
+            },
+            {
+                id: 8,
+                question: "One lemon cake for Stella's ...",
+                answer: "peace of mind, because she felt ashamed"
+            },
+            {
+                id: 9,
+                question: "Stella's \"vanished half\" shines through when ...",
+                answer: "she starts befriending Loretta, something she did expect"
+            },
+            {
+                id: 10,
+                question: "Stella had been raised to be ...",
+                answer: "hospitable"
+            },
+            {
+                id: 11,
+                question: "Stella suggests to Loretta ...",
+                answer: "that \"maybe the girls can play some\" (but Blake must never know!)"
+            },
+            {
+                id: 12,
+                question: "That \"the country was unrecognizable now\" refers to ...",
+                answer: "its changing political and societal landscape due to civil rights activism"
+            },
+            {
+                id: 13,
+                question: "The fact that Tom Pearson, Dale Johansen, and Percy White would agree with some of King's ideas but never allow him to move into their neighborhood is an example of ...",
+                answer: "hypocrisy and a \"Not In My Backyard\" attitude"
+            },
+            {
+                id: 14,
+                question: "Stella fears that her entire life (her family, her status, and her identity) ...",
+                answer: "could be destroyed if anyone finds out the truth"
+            },
+            {
+                id: 15,
+                question: "Internalized racism occurs ...",
+                answer: "when a person accepts (and perpetuates) the idea that their own race is inferior"
+            },
+            {
+                id: 16,
+                question: "By telling Kennedy not to play with the Walker girl, Stella ...",
+                answer: "passes on the very prejudice she once tried to escape, thus betraying herself, her family, and her past"
+            },
+            {
+                id: 17,
+                question: "Another interpretation of Loretta saying that she \"never imaged no white woman showing up in [her] kitchen\" is ...",
+                answer: "that she sees through Stella's performance, indirectly telling her \"I know you're not really white\""
+            },
+            {
+                id: 18,
+                question: "The \"lopsided cake\" symbolizes ...",
+                answer: "Stella's nervousness and uncertainty"
+            },
+            {
+                id: 19,
+                question: "Kennedy's nightmares can be interpreted as an example of ...",
+                answer: "intergenerational trauma"
+            },
+            {
+                id: 20,
+                question: "Reg Walker seems to be polite, educated, wealthy, and ...",
+                answer: "getting along well with Blake Sanders and other neighbors"
+            }
+        ];
+
+        let currentMatches = {};
+        let draggedElement = null;
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function initializeExercise() {
+            const leftColumn = document.getElementById('leftColumn');
+            const rightColumn = document.getElementById('rightColumn');
+            
+            leftColumn.innerHTML = '';
+            rightColumn.innerHTML = '';
+            currentMatches = {};
+
+            // Shuffle questions
+            const shuffledQuestions = shuffleArray(pairs);
+            
+            // Create draggable question items
+            shuffledQuestions.forEach(pair => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'match-item';
+                questionDiv.draggable = true;
+                questionDiv.dataset.id = pair.id;
+                questionDiv.innerHTML = `<span class="match-number">${pair.id}</span>${pair.question}`;
+                
+                questionDiv.addEventListener('dragstart', handleDragStart);
+                questionDiv.addEventListener('dragend', handleDragEnd);
+                
+                leftColumn.appendChild(questionDiv);
+            });
+
+            // Shuffle answers
+            const shuffledAnswers = shuffleArray(pairs);
+            
+            // Create drop zones with answers
+            shuffledAnswers.forEach(pair => {
+                const dropZone = document.createElement('div');
+                dropZone.className = 'drop-zone';
+                dropZone.dataset.id = pair.id;
+                dropZone.innerHTML = `<div class="answer-text">${pair.answer}</div>`;
+                
+                dropZone.addEventListener('dragover', handleDragOver);
+                dropZone.addEventListener('drop', handleDrop);
+                dropZone.addEventListener('dragleave', handleDragLeave);
+                
+                rightColumn.appendChild(dropZone);
+            });
+
+            // Hide score
+            document.getElementById('scoreDisplay').classList.remove('show');
+        }
+
+        function handleDragStart(e) {
+            draggedElement = e.target;
+            e.target.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', e.target.dataset.id);
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            e.dataTransfer.dropEffect = 'move';
+            
+            // Only highlight if zone is empty
+            if (!e.currentTarget.classList.contains('occupied')) {
+                e.currentTarget.classList.add('drag-over');
+            }
+            
+            return false;
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+            e.preventDefault();
+
+            const dropZone = e.currentTarget;
+            dropZone.classList.remove('drag-over');
+
+            // Don't allow drop if zone is already occupied
+            if (dropZone.classList.contains('occupied')) {
+                return false;
+            }
+
+            const questionId = e.dataTransfer.getData('text/plain');
+            const answerId = dropZone.dataset.id;
+
+            // Remove the dragged element from its original position
+            if (draggedElement && draggedElement.parentNode) {
+                draggedElement.parentNode.removeChild(draggedElement);
+            }
+
+            // Create a new element in the drop zone
+            const matchedItem = document.createElement('div');
+            matchedItem.className = 'match-item';
+            matchedItem.draggable = true;
+            matchedItem.dataset.id = questionId;
+            matchedItem.innerHTML = draggedElement.innerHTML;
+            
+            matchedItem.addEventListener('dragstart', handleDragStart);
+            matchedItem.addEventListener('dragend', handleDragEnd);
+            
+            // Insert before the answer text
+            const answerText = dropZone.querySelector('.answer-text');
+            dropZone.insertBefore(matchedItem, answerText);
+            
+            dropZone.classList.add('occupied');
+
+            // Record the match
+            currentMatches[questionId] = answerId;
+
+            return false;
+        }
+
+        function checkAnswers() {
+            let correct = 0;
+            const total = pairs.length;
+
+            // Reset all styling
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                zone.classList.remove('correct', 'incorrect');
+                const item = zone.querySelector('.match-item');
+                if (item) {
+                    item.classList.remove('correct', 'incorrect');
+                }
+            });
+
+            // Check each match
+            Object.keys(currentMatches).forEach(questionId => {
+                const answerId = currentMatches[questionId];
+                const dropZone = document.querySelector(`.drop-zone[data-id="${answerId}"]`);
+                const matchItem = dropZone.querySelector('.match-item');
+
+                if (questionId === answerId) {
+                    correct++;
+                    dropZone.classList.add('correct');
+                    if (matchItem) matchItem.classList.add('correct');
+                } else {
+                    dropZone.classList.add('incorrect');
+                    if (matchItem) matchItem.classList.add('incorrect');
+                }
+            });
+
+            // Display score
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            const percentage = Math.round((correct / total) * 100);
+            scoreDisplay.innerHTML = `Score: ${correct} out of ${total} (${percentage}%)`;
+            scoreDisplay.classList.add('show');
+
+            // Scroll to score
+            scoreDisplay.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function shuffleItems() {
+            // Return all items to left column before shuffling
+            document.querySelectorAll('.drop-zone .match-item').forEach(item => {
+                const leftColumn = document.getElementById('leftColumn');
+                leftColumn.appendChild(item);
+            });
+
+            // Clear drop zones
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                zone.classList.remove('occupied', 'correct', 'incorrect');
+            });
+
+            // Shuffle left column
+            const leftColumn = document.getElementById('leftColumn');
+            const items = Array.from(leftColumn.children);
+            const shuffled = shuffleArray(items);
+            leftColumn.innerHTML = '';
+            shuffled.forEach(item => {
+                item.classList.remove('correct', 'incorrect');
+                leftColumn.appendChild(item);
+            });
+
+            // Shuffle right column
+            const rightColumn = document.getElementById('rightColumn');
+            const dropZones = Array.from(rightColumn.children);
+            const shuffledZones = shuffleArray(dropZones);
+            rightColumn.innerHTML = '';
+            shuffledZones.forEach(zone => {
+                zone.classList.remove('correct', 'incorrect');
+                rightColumn.appendChild(zone);
+            });
+
+            currentMatches = {};
+            document.getElementById('scoreDisplay').classList.remove('show');
+        }
+
+        function resetExercise() {
+            // Clear all matches
+            currentMatches = {};
+            
+            // Hide score display
+            document.getElementById('scoreDisplay').classList.remove('show');
+            
+            // Remove all items from drop zones and return to left column
+            document.querySelectorAll('.drop-zone .match-item').forEach(item => {
+                item.remove();
+            });
+            
+            // Clear and reset both columns
+            const leftColumn = document.getElementById('leftColumn');
+            const rightColumn = document.getElementById('rightColumn');
+            
+            leftColumn.innerHTML = '';
+            rightColumn.innerHTML = '';
+            
+            // Reinitialize everything
+            initializeExercise();
+        }
+
+        // Initialize on load
+        initializeExercise();
+    </script>
+</body>
+</html>
